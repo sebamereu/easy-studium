@@ -34,7 +34,7 @@ public class Event
 
         for(Event event : eventsList)
         {
-            int eventHour = event.time.getHour();
+            int eventHour = event.getTimePicker().getHour();
             int cellHour = time.getHour();
             if(event.getDate().equals(date) && eventHour == cellHour)
                 events.add(event);

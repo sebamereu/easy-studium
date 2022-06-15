@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +34,10 @@ import java.util.Objects;
 public class EventEditFragment extends DialogFragment {
 
     private EditText eventNameET;
-    private TextView eventDateTV, eventTimeTV;
+    private TextView eventDateTV;
     private Button saveEventAction;
     private LocalTime  time;
-    private TimePicker timePicker;
+    private TimePicker timePicker, eventTimeTV;
     public static int hour, minute;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,18 +89,19 @@ public class EventEditFragment extends DialogFragment {
 
         time = LocalTime.now();
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(CalendarUtils.selectedDate));
-        eventTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
+        //eventTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
 
         eventTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    eventTimeTV.setRawInputType(InputType.TYPE_NULL);
+                    //eventTimeTV.setRawInputType(InputType.TYPE_DATETIME_VARIATION_TIME);
                     TimePickerDialog.OnTimeSetListener onTimeSetListener=
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute1) {
-                                    eventTimeTV.setText("Time: " + view.getHour()+ ":"+view.getMinute());
-
+                                    //eventTimeTV.setText("Time: " + view.getHour()+ ":"+view.getMinute());
+                                    eventTimeTV.setHour(hourOfDay);
+                                    eventTimeTV.setMinute(minute1);
                                 }
                             };
                     int style = AlertDialog.THEME_DEVICE_DEFAULT_DARK;
@@ -121,9 +123,11 @@ public class EventEditFragment extends DialogFragment {
             public void onClick(View v) {
                 String eventName = eventNameET.getText().toString();
 
-                Event newEvent = new Event(eventName, CalendarUtils.selectedDate, time, null );
+                Event newEvent = new Event(eventName, CalendarUtils.selectedDate, time, eventTimeTV );
                 Event.eventsList.add(newEvent);
                 replaceFragment(new DailyCalendarFragment());
+
+                Log.d("EventEditFragment", ""+ newEvent.getTimePicker().getHour()+":"+newEvent.getTimePicker().getMinute());
             }
         });
         // Inflate the layout for this fragment
