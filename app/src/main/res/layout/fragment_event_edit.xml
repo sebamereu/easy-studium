@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +8,14 @@
     android:layout_gravity="center"
     tools:context=".EventEditFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,18 +45,35 @@
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
-
-    <TimePicker
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <Button
         android:id="@+id/eventTimeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Time"
+        android:text="Time inizio"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <Space
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+    <Button
+        android:id="@+id/eventTimeFinish"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Time fine"
         android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
-
+</LinearLayout>
     <Button
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
@@ -61,5 +85,6 @@
         android:id="@+id/saveEventAction"
         android:layout_gravity="center"
         android:textSize="20sp"/>
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

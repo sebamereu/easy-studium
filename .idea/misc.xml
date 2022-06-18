@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable/button.xml" value="0.1" />
         <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable/forget.xml" value="0.1" />
+        <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.1" />
+        <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.1" />
         <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable/ic_baseline_home_work_24.xml" value="0.1005" />
+        <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/layout/activity_daily_calendar.xml" value="0.1" />
         <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/layout/activity_event_edit.xml" value="0.1" />
         <entry key="..\:/Users/sebam/AndroidStudioProjects/easystudium3/app/src/main/res/layout/activity_login.xml" value="0.21041666666666667" />

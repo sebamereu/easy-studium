@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,6 +142,13 @@ public class DailyCalendarFragment extends Fragment {
             ArrayList<Event> events = Event.eventsForDateAndTime(selectedDate, time);
             HourEvent hourEvent = new HourEvent(time, events);
             list.add(hourEvent);
+
+             time = LocalTime.of(hour, 30);
+             events = Event.eventsForDateAndTime(selectedDate, time);
+             hourEvent = new HourEvent(time, events);
+            list.add(hourEvent);
+
+            Log.d("DailyCalendarFragment1", ""+list.size());
         }
 
         return list;

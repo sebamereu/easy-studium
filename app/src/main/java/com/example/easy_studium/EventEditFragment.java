@@ -35,9 +35,9 @@ public class EventEditFragment extends DialogFragment {
 
     private EditText eventNameET;
     private TextView eventDateTV;
-    private Button saveEventAction;
+    private Button saveEventAction, eventTimeTV, eventTimeFinish;
     private LocalTime  time;
-    private TimePicker timePicker, eventTimeTV;
+    private TimePicker timePicker, eventTimeInizio, eventTimeFine;
     public static int hour, minute;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,6 +86,7 @@ public class EventEditFragment extends DialogFragment {
         eventNameET = view.findViewById(R.id.eventNameET);
         eventDateTV = view.findViewById(R.id.eventDateTV);
         eventTimeTV = view.findViewById(R.id.eventTimeTV);
+        eventTimeFinish=view.findViewById(R.id.eventTimeFinish);
 
         time = LocalTime.now();
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(CalendarUtils.selectedDate));
@@ -98,10 +99,15 @@ public class EventEditFragment extends DialogFragment {
                     TimePickerDialog.OnTimeSetListener onTimeSetListener=
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay, int minute1) {
-                                    //eventTimeTV.setText("Time: " + view.getHour()+ ":"+view.getMinute());
-                                    eventTimeTV.setHour(hourOfDay);
-                                    eventTimeTV.setMinute(minute1);
+                                public void onTimeSet(TimePicker eventTime, int hour, int minute) {
+
+                                        eventTimeTV.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute());
+
+
+                                    eventTime.setHour(eventTime.getHour());
+                                    eventTime.setMinute(eventTime.getMinute());
+                                    Log.d("EventEditFragment", ""+ eventTime.getHour());
+                                    eventTimeInizio=eventTime;
                                 }
                             };
                     int style = AlertDialog.THEME_DEVICE_DEFAULT_DARK;
@@ -114,6 +120,34 @@ public class EventEditFragment extends DialogFragment {
             }
         });
 
+        eventTimeFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //eventTimeTV.setRawInputType(InputType.TYPE_DATETIME_VARIATION_TIME);
+                TimePickerDialog.OnTimeSetListener onTimeSetListener1=
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker eventTime, int hour, int minute) {
+
+                                eventTimeFinish.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute());
+
+
+                                eventTime.setHour(eventTime.getHour());
+                                eventTime.setMinute(eventTime.getMinute());
+                                Log.d("EventEditFragment", ""+ eventTime.getHour());
+                                eventTimeFine=eventTime;
+                            }
+                        };
+                int style = AlertDialog.THEME_DEVICE_DEFAULT_DARK;
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), style, onTimeSetListener1, hour, minute, true );
+
+                timePickerDialog.setTitle("Select time");
+                timePickerDialog.show();
+
+            }
+        });
+
 
 
 
@@ -122,23 +156,34 @@ public class EventEditFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String eventName = eventNameET.getText().toString();
+                TimePicker timePicker=eventTimeInizio;
+                TimePicker timePicker1=eventTimeFine;
 
-                Event newEvent = new Event(eventName, CalendarUtils.selectedDate, time, eventTimeTV );
-                Event.eventsList.add(newEvent);
+
+
+                Event event = new Event(eventName, CalendarUtils.selectedDate, time, timePicker);
+                Event.eventsList.add(event);
+                Log.d("EventEditFragment", "" + event.getTimePicker().getHour() + ":" + event.getTimePicker().getMinute());
+
+                TimePicker timePickerProvvisorio= timePicker;
+                timePickerProvvisorio.setHour(timePicker.getHour()+1);
+                Event provvisorio = new Event(eventName, CalendarUtils.selectedDate, time, timePicker1);
+                Event.eventsList.add(provvisorio);
+                Log.d("EventEditFragment", "" + event.getTimePicker().getHour() + ":" + event.getTimePicker().getMinute());
+
+                Log.d("EventEditFragment", "" + provvisorio.getTimePicker().getHour() + ":" + provvisorio.getTimePicker().getMinute());
+
+
+
+
+                Log.d("EventEditFragment", ""+ Event.eventsList.toString());
+
                 replaceFragment(new DailyCalendarFragment());
 
-                Log.d("EventEditFragment", ""+ newEvent.getTimePicker().getHour()+":"+newEvent.getTimePicker().getMinute());
-            }
+           }
         });
         // Inflate the layout for this fragment
         return view;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void saveEventAction(View view)
-    {
-        String eventName = eventNameET.getText().toString();
-        Event newEvent = new Event(eventName, CalendarUtils.selectedDate, time, null);
-        Event.eventsList.add(newEvent);
     }
 
     void replaceFragment(Fragment fragment){
