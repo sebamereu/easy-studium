@@ -37,7 +37,7 @@ public class EventEditFragment extends DialogFragment {
     private TextView eventDateTV;
     private Button saveEventAction, eventTimeTV, eventTimeFinish;
     private LocalTime  time;
-    private TimePicker timePicker, eventTimeInizio, eventTimeFine;
+    private TimePicker eventTimeInizio, eventTimeFine;
     public static int hour, minute;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -156,23 +156,54 @@ public class EventEditFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String eventName = eventNameET.getText().toString();
-                TimePicker timePicker=eventTimeInizio;
-                TimePicker timePicker1=eventTimeFine;
+                TimePicker timePickerInizio=eventTimeInizio;
+                TimePicker timePickerFine=eventTimeFine;
+                int hourInizio=timePickerInizio.getHour();
+                int hourFine=timePickerFine.getHour();
+                int minuteInizio=timePickerInizio.getMinute();
+                int minuteFine=timePickerFine.getMinute();
+
+                int cont=1;
+                int max=(hourFine-hourInizio)*2;
+
+                if (minuteFine>=30) max++;
+                if (minuteInizio>=30) max--;
+                if(hourFine-hourInizio==0) max=1;
+                if (hourFine-hourInizio==0 && minuteFine<30) max=0;
 
 
+                TimePicker[] timePickers = new TimePicker[max+1];
+                for (int i=0;i<max;i++) {
+                    timePickers[i] = new TimePicker(getContext());
+                    //timePickers[i].setHour(hourInizio+i);
+                    //timePickers[i].setMinute(minuteInizio);
+                    if (i==0){
+                        timePickers[i].setHour(hourInizio);
+                        timePickers[i].setMinute(minuteInizio);
+                    }else if (timePickers[i-1].getMinute() >= 30) {
+                        timePickers[i].setHour(hourInizio + cont);
+                        timePickers[i].setMinute(minuteInizio-30);
+                        cont++;
+                    } else {
+                        timePickers[i].setHour(timePickers[i-1].getHour());
+                        timePickers[i].setMinute(minuteInizio+30);
+                    }
+                    Log.d("EventEditFragment", "" + timePickers[i].getHour() + ":" + timePickers[i].getMinute());
 
-                Event event = new Event(eventName, CalendarUtils.selectedDate, time, timePicker);
-                Event.eventsList.add(event);
-                Log.d("EventEditFragment", "" + event.getTimePicker().getHour() + ":" + event.getTimePicker().getMinute());
+                }
 
-                TimePicker timePickerProvvisorio= timePicker;
-                timePickerProvvisorio.setHour(timePicker.getHour()+1);
-                Event provvisorio = new Event(eventName, CalendarUtils.selectedDate, time, timePicker1);
-                Event.eventsList.add(provvisorio);
-                Log.d("EventEditFragment", "" + event.getTimePicker().getHour() + ":" + event.getTimePicker().getMinute());
+                Event[] events = new Event[max+1];
 
-                Log.d("EventEditFragment", "" + provvisorio.getTimePicker().getHour() + ":" + provvisorio.getTimePicker().getMinute());
+                //Event eventInizio = new Event(eventName, CalendarUtils.selectedDate, time, timePickerInizio);
+                //Event.eventsList.add(eventInizio);
+                //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
+                for (int i = 0;i<max;i++) {
+                    events[i] = new Event(eventName, CalendarUtils.selectedDate, time, timePickers[i]);
+                    Event.eventsList.add(events[i]);
+                    //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
 
+                    //Log.d("EventEditFragment", "" + events[i].getTimePicker().getHour() + ":" + events[i].getTimePicker().getMinute());
+                }
 
 
 
