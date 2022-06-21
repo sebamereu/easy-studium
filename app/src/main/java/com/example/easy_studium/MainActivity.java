@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new DailyCalendarFragment());
                     break;
                 case R.id.esami:
-                    replaceFragment(new ExamFragment());
+                    replaceFragment(new ExamStatFragment());
                     break;
                 case R.id.profilo:
                     replaceFragment(new UserFragment());

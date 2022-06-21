@@ -11,20 +11,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +40,13 @@ public class EventEditFragment extends DialogFragment {
     private TextView eventDateTV;
     private Button saveEventAction, eventTimeTV, eventTimeFinish;
     private LocalTime  time;
+    public static Spinner spinner, spinnerToDo;
     private TimePicker eventTimeInizio, eventTimeFine;
     public static int hour, minute;
+    public static String[] items = new String[]{"Teoria", "Laboratorio", "Progetto"};
+    ArrayAdapter<String> adapter1;
+    ArrayList<String> arrayList;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,10 +95,25 @@ public class EventEditFragment extends DialogFragment {
         eventDateTV = view.findViewById(R.id.eventDateTV);
         eventTimeTV = view.findViewById(R.id.eventTimeTV);
         eventTimeFinish=view.findViewById(R.id.eventTimeFinish);
+        spinner=view.findViewById(R.id.spinner1);
+        spinnerToDo=view.findViewById(R.id.spinner2);
+
+        arrayList=Exam.arrayList1;
+        adapter1=ExamFragment.adapter;
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
+                R.array.planets_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter1);
+        spinnerToDo.setAdapter(adapter);
+
+
 
         time = LocalTime.now();
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(CalendarUtils.selectedDate));
         //eventTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
+
 
         eventTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,7 +178,11 @@ public class EventEditFragment extends DialogFragment {
         saveEventAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String eventName = eventNameET.getText().toString();
+                //String eventName = eventNameET.getText().toString();
+
+                String eventName = (""+spinner.getSelectedItem().toString()+
+                        " - "+ spinnerToDo.getSelectedItem().toString());
+
                 TimePicker timePickerInizio=eventTimeInizio;
                 TimePicker timePickerFine=eventTimeFine;
                 int hourInizio=timePickerInizio.getHour();
@@ -198,8 +225,16 @@ public class EventEditFragment extends DialogFragment {
                 //Event.eventsList.add(eventInizio);
                 //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
                 for (int i = 0;i<max;i++) {
-                    events[i] = new Event(eventName, CalendarUtils.selectedDate, time, timePickers[i]);
-                    Event.eventsList.add(events[i]);
+                    if (i == 0) {
+                        events[i] = new Event(eventName, CalendarUtils.selectedDate, time, spinner.getSelectedItem(),spinnerToDo.getSelectedItem(),  timePickers[i]);
+                        Event.eventsList.add(events[i]);
+                    }
+                    else{
+                        events[i] = new Event("", CalendarUtils.selectedDate, time, spinner.getSelectedItem(),spinnerToDo.getSelectedItem(),  timePickers[i]);
+                        Event.eventsList.add(events[i]);
+
+                    }
+
                     //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
 
                     //Log.d("EventEditFragment", "" + events[i].getTimePicker().getHour() + ":" + events[i].getTimePicker().getMinute());

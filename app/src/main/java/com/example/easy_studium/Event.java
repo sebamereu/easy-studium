@@ -3,6 +3,7 @@ package com.example.easy_studium;
 import android.app.TimePickerDialog;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import androidx.annotation.RequiresApi;
@@ -10,7 +11,10 @@ import androidx.annotation.RequiresApi;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Objects;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class Event {
     public static ArrayList<Event> eventsList = new ArrayList<>();
 
@@ -90,14 +94,16 @@ public class Event {
     private String name;
     private LocalDate date;
     private LocalTime time;
-
+    private Object exam;
+    private Object examMode;
 
     private TimePicker timePicker;
 
 
 
 
-    public Event(String name, LocalDate date, LocalTime time, TimePicker timePicker) {
+
+    public Event(String name, LocalDate date, LocalTime time, Object exam, Object examMode, TimePicker timePicker) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -136,4 +142,19 @@ public class Event {
         this.timePicker = timePicker;
     }
 
+    public Object getExam() {
+        return exam;
+    }
+
+    public void setExam(Object exam) {
+        this.exam = exam;
+    }
+
+    public Object getExamMode() {
+        return examMode;
+    }
+
+    public void setExamMode(Object examMode) {
+        this.examMode = examMode;
+    }
 }

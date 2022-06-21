@@ -72,6 +72,8 @@
     <ListView
         android:id="@+id/hourListView"
         android:layout_width="match_parent"
+        android:divider="@color/celesteapp"
+        android:dividerHeight="0mm"
         android:layout_height="0dp"
         android:layout_weight="5" />
 

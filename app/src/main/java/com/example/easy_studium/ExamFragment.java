@@ -1,12 +1,23 @@
 package com.example.easy_studium;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +25,11 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ExamFragment extends Fragment {
+
+    private TextView examName, examCFU;
+    private Button saveExam;
+    public static ArrayAdapter<String> adapter;
+    private ArrayList<String> arrayList;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +74,40 @@ public class ExamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view;
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_exam, container, false);
+        view= inflater.inflate(R.layout.fragment_exam, container, false);
+
+        examName=view.findViewById(R.id.examName);
+        examCFU=view.findViewById(R.id.examCFU);
+        saveExam=view.findViewById(R.id.saveExamAction);
+
+        arrayList=Exam.arrayList1;
+        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, arrayList);
+
+
+
+
+        saveExam.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                String exam=examName.getText().toString();
+                Exam.arrayList1.add(exam);
+
+
+                replaceFragment(new DailyCalendarFragment());
+
+            }
+        });
+
+                return view;
+    }
+    void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
     }
 }

@@ -20,11 +20,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -40,6 +44,8 @@ public class DailyCalendarFragment extends Fragment {
     private TextView monthDayText;
     private TextView dayOfWeekTV;
     private ListView hourListView;
+    LocalTime time = LocalTime.now();
+
 
 
     public DailyCalendarFragment() {
@@ -61,6 +67,9 @@ public class DailyCalendarFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,6 +106,7 @@ public class DailyCalendarFragment extends Fragment {
         newEventAction.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
                 if (hasFocus)
                     new EventEditFragment().show(
                             getActivity().getSupportFragmentManager(), EventEditFragment.TAG);
@@ -125,6 +135,22 @@ public class DailyCalendarFragment extends Fragment {
         monthDayText.setText(CalendarUtils.monthDayFromDate(selectedDate));
         String dayOfWeek = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
         dayOfWeekTV.setText(dayOfWeek);
+        long timestampDate = 1623307684;
+        int dateYear = selectedDate.getYear();
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int dateMonth= selectedDate.getMonth().getValue();
+        int month=Calendar.getInstance().get(Calendar.MONTH);
+        int dateDay=selectedDate.getDayOfYear();
+        int day=Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int i = (int) (new Date().getTime()/1000);
+        if(dateDay<day)
+        {
+            newEventAction.setVisibility(View.GONE);
+        }
+        else {
+            newEventAction.setVisibility(View.VISIBLE);
+        }
         setHourAdapter();
     }
 
