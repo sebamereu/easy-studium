@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link editExamFragment#newInstance} factory method to
+ * Use the {@link EditExamFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class editExamFragment extends Fragment {
+public class EditExamFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +24,7 @@ public class editExamFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public editExamFragment() {
+    public EditExamFragment() {
         // Required empty public constructor
     }
 
@@ -34,11 +34,11 @@ public class editExamFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment editExamFragment.
+     * @return A new instance of fragment EditExamFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static editExamFragment newInstance(String param1, String param2) {
-        editExamFragment fragment = new editExamFragment();
+    public static EditExamFragment newInstance(String param1, String param2) {
+        EditExamFragment fragment = new EditExamFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
