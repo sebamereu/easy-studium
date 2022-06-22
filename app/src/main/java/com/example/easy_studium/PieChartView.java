@@ -130,11 +130,11 @@ public class PieChartView extends View {
     }
 
     public void setSegmentColor(List<Integer> segmentColor) {
-        if (segmentColor.size()!= percent.size()){
+      /*  if (segmentColor.size()!= percent.size()){
             throw new IllegalArgumentException(
                     "La lista dei colori e delle percentuali devono essere uguali"
             );
-        }
+        }*/
 
         this.segmentColor = segmentColor;
     }

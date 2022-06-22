@@ -106,6 +106,8 @@ public class Event {
     public Event(String name, LocalDate date, LocalTime time, Object exam, Object examMode, TimePicker timePicker) {
         this.name = name;
         this.date = date;
+        this.exam=exam;
+        this.examMode=examMode;
         this.time = time;
         this.timePicker = timePicker;
     }

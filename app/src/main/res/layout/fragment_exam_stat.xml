@@ -5,7 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ExamStatFragment">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
     <Button
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
@@ -53,4 +59,13 @@
         android:id="@+id/piechart"
         />
 
+    <com.anychart.AnyChartView
+        android:id="@+id/anyChart"
+         android:layout_height="350dp"
+        android:layout_width="350dp"
+        android:layout_gravity="center">
+
+    </com.anychart.AnyChartView>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

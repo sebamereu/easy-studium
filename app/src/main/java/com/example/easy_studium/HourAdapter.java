@@ -86,6 +86,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent>
         tv.setVisibility(View.INVISIBLE);
     }
 
+
 }
 
 

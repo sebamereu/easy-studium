@@ -19,6 +19,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Pie;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -31,6 +37,7 @@ import java.util.Random;
  * Use the {@link ExamStatFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class ExamStatFragment extends Fragment {
 
     private Button addExam;
@@ -40,7 +47,14 @@ public class ExamStatFragment extends Fragment {
     ListView listView;
     ListViewAdapter adapter;
     ArrayList<String> items;
+    AnyChartView anyChartView;
+    //String[] months={};
+    //int[] values={};
+    ArrayList<String> esamiString=new ArrayList<>();
+    ArrayList<Integer> minutiInteger=new ArrayList<>();
 
+    String[] esami=new String[Exam.arrayList1.size()];
+     int[] minuti=new int[Exam.arrayList1.size()];
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -92,7 +106,9 @@ public class ExamStatFragment extends Fragment {
         addExam=view.findViewById(R.id.addExam);
         hourStudy=view.findViewById(R.id.hourStudy);
         listView=view.findViewById(R.id.list);
+        anyChartView=view.findViewById(R.id.anyChart);
 
+        String controllo;
         items = new ArrayList<>();
         for (int i = 0; i < Exam.arrayList1.size(); i++) {
             items.add(Exam.arrayList1.get(i));
@@ -103,16 +119,52 @@ public class ExamStatFragment extends Fragment {
 
         PieChartView piechart= view.findViewById(R.id.piechart);
 
-        Float[] percent = new Float[]{40.0f, 20.0f ,20.0f ,20.0f};
+        Float[] percent = new Float[Exam.arrayList1.size()];
         Integer[] colors = new Integer[]{0xffedf8fb, 0xffb2e2e2, 0xff66c2a4, 0xff66c2a4};
+       // if (Event.eventsList.size()==0){
+            piechart.setVisibility(View.GONE);
+       // }
 
-        piechart.setPercent(Arrays.asList(percent));
+        if (Event.eventsList.size()!=0) {
+            for (int j=0;j<Exam.arrayList1.size();j++) {
+                String esame;
+                int minuto = 0;
+                for (int i = 0; i < Event.eventsList.size(); i++) {
+                    controllo = String.valueOf(Event.eventsList.get(i).getExam());
+                    Log.d("ListViewAdapter", "" + controllo + " / " + Exam.arrayList1.get(j));
+                    if (controllo.equals(Exam.arrayList1.get(j)))
+                        minuto+=30;
+
+                }
+                minuti[j]=minuto;
+                minutiInteger.add(minuto);
+            }
+
+
+
+
+
+
+            for (int j = 0; j < Exam.arrayList1.size(); j++) {
+
+                for (int i = 0; i < Event.eventsList.size(); i++) {
+                    controllo = String.valueOf(Event.eventsList.get(i).getExam());
+                    if (controllo.equals(Exam.arrayList1.get(j)))
+                        esami[j] = controllo;
+                    esamiString.add(controllo);
+                }
+                Log.d("ExamStatFragment", "Minuti[" + j + "]: " + minuti[j]);
+            }
+        }
+        //float calcolo = (minutiTotali/minuti)+100;
+        //for (int i=0;i<percent.length;i++){percent[i] =calcolo;}
+        /*    piechart.setPercent(Arrays.asList(percent));
         piechart.setSegmentColor(Arrays.asList(colors));
 
         piechart.setRadius(300);
         piechart.setStrokeColor(Color.BLACK);
         piechart.setStrokeWidth(4);
-
+*/
         //piechart.setSelectedColor(0xff0198E1);
         //piechart.setSelectedWidth(8);
 
@@ -124,6 +176,8 @@ public class ExamStatFragment extends Fragment {
 
         hourStudyInt=countDayStudy/2;
         hourStudy.setText(""+hourStudyInt);
+
+        setupPieChart();
 
         addExam.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,4 +196,20 @@ public class ExamStatFragment extends Fragment {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
+
+    public void setupPieChart(){
+        Pie pie= AnyChart.pie();
+        List<DataEntry> dataEntries =new ArrayList<>();
+
+        if (esami.length!=0) {
+            for (int i = 0; i < esami.length; i++) {
+                dataEntries.add(new ValueDataEntry(esami[i], minuti[i]));
+            }
+        }
+
+        pie.data(dataEntries);
+        anyChartView.setChart(pie);
+    }
+
+
 }

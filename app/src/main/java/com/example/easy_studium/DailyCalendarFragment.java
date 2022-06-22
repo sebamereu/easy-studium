@@ -41,7 +41,7 @@ import java.util.Locale;
 public class DailyCalendarFragment extends Fragment {
 
     private Button newEventAction, previousDayAction, nextDayAction;
-    private TextView monthDayText;
+    private TextView monthDayText, event1;
     private TextView dayOfWeekTV;
     private ListView hourListView;
     LocalTime time = LocalTime.now();
@@ -75,6 +75,7 @@ public class DailyCalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_daily_calendar, container, false);
+        View convertView= inflater.inflate(R.layout.hour_cell, container, false);
 
         monthDayText = (TextView) view.findViewById(R.id.monthDayText);
         dayOfWeekTV = (TextView) view.findViewById(R.id.dayOfWeekTV);
@@ -82,9 +83,12 @@ public class DailyCalendarFragment extends Fragment {
         previousDayAction = (Button) view.findViewById(R.id.previousDayAction);
         nextDayAction=(Button) view.findViewById(R.id.nextDayAction);
         newEventAction= (Button) view.findViewById(R.id.newEventAction);
+        event1=view.findViewById(R.id.event1);
         CalendarUtils.selectedDate = LocalDate.now();
 
         setDayView();
+
+
 
         previousDayAction.setOnClickListener(new View.OnClickListener() {
             @Override
