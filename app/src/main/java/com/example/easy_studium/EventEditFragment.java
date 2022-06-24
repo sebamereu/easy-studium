@@ -2,6 +2,7 @@ package com.example.easy_studium;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -26,6 +27,8 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -37,8 +40,8 @@ import java.util.Calendar;
 public class EventEditFragment extends DialogFragment {
 
     private EditText eventNameET;
-    private TextView eventDateTV;
-    private Button saveEventAction, eventTimeTV, eventTimeFinish;
+    private TextView eventDateTV, errorText, errorNullExam;
+    private Button newEventAction, saveEventAction, eventTimeTV, eventTimeFinish;
     private LocalTime  time;
     public static Spinner spinner, spinnerToDo;
     private TimePicker eventTimeInizio, eventTimeFine;
@@ -97,7 +100,8 @@ public class EventEditFragment extends DialogFragment {
         eventTimeFinish=view.findViewById(R.id.eventTimeFinish);
         spinner=view.findViewById(R.id.spinner1);
         spinnerToDo=view.findViewById(R.id.spinner2);
-
+        errorText=view.findViewById(R.id.errorText);
+        newEventAction=view.findViewById(R.id.newEventAction);
         arrayList=Exam.arrayList1;
         adapter1=ExamFragment.adapter;
 
@@ -114,6 +118,10 @@ public class EventEditFragment extends DialogFragment {
         eventDateTV.setText("Date: " + CalendarUtils.formattedDate(CalendarUtils.selectedDate));
         //eventTimeTV.setText("Time: " + CalendarUtils.formattedTime(time));
 
+        if (Exam.listExam.size()==0){
+            newEventAction.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.GONE);
+        }
 
         eventTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,85 +180,131 @@ public class EventEditFragment extends DialogFragment {
         });
 
 
-
+        newEventAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new EventEditFragment());
+            }
+        });
 
 
         saveEventAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String eventName = eventNameET.getText().toString();
+                if (checkInput()) {
+                    //String eventName = eventNameET.getText().toString();
 
-                String eventName = (""+spinner.getSelectedItem().toString()+
-                        " - "+ spinnerToDo.getSelectedItem().toString());
+                    String eventName = ("" + spinner.getSelectedItem().toString() +
+                            " - " + spinnerToDo.getSelectedItem().toString());
 
-                TimePicker timePickerInizio=eventTimeInizio;
-                TimePicker timePickerFine=eventTimeFine;
-                int hourInizio=timePickerInizio.getHour();
-                int hourFine=timePickerFine.getHour();
-                int minuteInizio=timePickerInizio.getMinute();
-                int minuteFine=timePickerFine.getMinute();
+                    TimePicker timePickerInizio = eventTimeInizio;
+                    TimePicker timePickerFine = eventTimeFine;
+                    int hourInizio = timePickerInizio.getHour();
+                    int hourFine = timePickerFine.getHour();
+                    int minuteInizio = timePickerInizio.getMinute();
+                    int minuteFine = timePickerFine.getMinute();
 
-                int cont=1;
-                int max=(hourFine-hourInizio)*2;
+                    int cont = 1;
+                    int max = (hourFine - hourInizio) * 2;
 
-                if (minuteFine>=30) max++;
-                if (minuteInizio>=30) max--;
-                if(hourFine-hourInizio==0) max=1;
-                if (hourFine-hourInizio==0 && minuteFine<30) max=0;
+                    if (minuteFine >= 30) max++;
+                    if (minuteInizio >= 30) max--;
+                    if (hourFine - hourInizio == 0) max = 1;
+                    if (hourFine - hourInizio == 0 && minuteFine < 30) max = 0;
 
 
-                TimePicker[] timePickers = new TimePicker[max+1];
-                for (int i=0;i<max;i++) {
-                    timePickers[i] = new TimePicker(getContext());
-                    //timePickers[i].setHour(hourInizio+i);
-                    //timePickers[i].setMinute(minuteInizio);
-                    if (i==0){
-                        timePickers[i].setHour(hourInizio);
-                        timePickers[i].setMinute(minuteInizio);
-                    }else if (timePickers[i-1].getMinute() >= 30) {
-                        timePickers[i].setHour(hourInizio + cont);
-                        timePickers[i].setMinute(minuteInizio-30);
-                        cont++;
-                    } else {
-                        timePickers[i].setHour(timePickers[i-1].getHour());
-                        timePickers[i].setMinute(minuteInizio+30);
-                    }
-                    Log.d("EventEditFragment", "" + timePickers[i].getHour() + ":" + timePickers[i].getMinute());
-
-                }
-
-                Event[] events = new Event[max+1];
-
-                //Event eventInizio = new Event(eventName, CalendarUtils.selectedDate, time, timePickerInizio);
-                //Event.eventsList.add(eventInizio);
-                //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
-                for (int i = 0;i<max;i++) {
-                    if (i == 0) {
-                        events[i] = new Event(eventName, CalendarUtils.selectedDate, time, spinner.getSelectedItem(),spinnerToDo.getSelectedItem(),  timePickers[i]);
-                        Event.eventsList.add(events[i]);
-                    }
-                    else{
-                        events[i] = new Event("", CalendarUtils.selectedDate, time, spinner.getSelectedItem(),spinnerToDo.getSelectedItem(),  timePickers[i]);
-                        Event.eventsList.add(events[i]);
+                    TimePicker[] timePickers = new TimePicker[max + 1];
+                    for (int i = 0; i < max; i++) {
+                        timePickers[i] = new TimePicker(getContext());
+                        //timePickers[i].setHour(hourInizio+i);
+                        //timePickers[i].setMinute(minuteInizio);
+                        if (i == 0) {
+                            timePickers[i].setHour(hourInizio);
+                            timePickers[i].setMinute(minuteInizio);
+                        } else if (timePickers[i - 1].getMinute() >= 30) {
+                            timePickers[i].setHour(hourInizio + cont);
+                            timePickers[i].setMinute(minuteInizio - 30);
+                            cont++;
+                        } else {
+                            timePickers[i].setHour(timePickers[i - 1].getHour());
+                            timePickers[i].setMinute(minuteInizio + 30);
+                        }
+                        Log.d("EventEditFragment", "" + timePickers[i].getHour() + ":" + timePickers[i].getMinute());
 
                     }
 
+                    Event[] events = new Event[max + 1];
+
+                    //Event eventInizio = new Event(eventName, CalendarUtils.selectedDate, time, timePickerInizio);
+                    //Event.eventsList.add(eventInizio);
                     //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
+                    for (int i = 0; i < max; i++) {
+                        if (i == 0) {
+                            events[i] = new Event(eventName, CalendarUtils.selectedDate, time, spinner.getSelectedItem(), spinnerToDo.getSelectedItem(), timePickers[i]);
+                            Event.eventsList.add(events[i]);
+                        } else {
+                            events[i] = new Event("", CalendarUtils.selectedDate, time, spinner.getSelectedItem(), spinnerToDo.getSelectedItem(), timePickers[i]);
+                            Event.eventsList.add(events[i]);
 
-                    //Log.d("EventEditFragment", "" + events[i].getTimePicker().getHour() + ":" + events[i].getTimePicker().getMinute());
+                        }
+
+                        //Log.d("EventEditFragment", "" + eventInizio.getTimePicker().getHour() + ":" + eventInizio.getTimePicker().getMinute());
+
+                        //Log.d("EventEditFragment", "" + events[i].getTimePicker().getHour() + ":" + events[i].getTimePicker().getMinute());
+                    }
+
+
+                    Log.d("EventEditFragment", "" + Event.eventsList.toString());
+
+                    replaceFragment(new DailyCalendarFragment());
                 }
-
-
-
-                Log.d("EventEditFragment", ""+ Event.eventsList.toString());
-
-                replaceFragment(new DailyCalendarFragment());
-
            }
         });
         // Inflate the layout for this fragment
         return view;
     }
+
+    private boolean checkInput() {
+        int errors=0;
+        TextView errorTextExam = (TextView)spinner.getSelectedView();
+        TextView errorTextToDo = (TextView)spinnerToDo.getSelectedView();
+
+       if(Exam.listExam.size()==0) {
+            errors++;
+           newEventAction.setError("Inserire almeno un esme");
+       }else newEventAction.setError(null);
+
+        if(eventTimeInizio==null ) {
+            errors++;
+            eventTimeTV.setError("Inserire orario d'inizio");
+        }else  eventTimeTV.setError(null);
+
+
+        if(eventTimeFine==null ) {
+            errors++;
+            eventTimeFinish.setError("Inserire orario d'inizio");
+        }else  eventTimeFinish.setError(null);
+
+
+
+        switch (errors){
+            case 0:
+                errorText.setVisibility(View.GONE);
+                errorText.setText("");
+                break;
+            case 1:
+                errorText.setVisibility(View.VISIBLE);
+                errorText.setText("Si è verificato un errore");
+                break;
+            default:
+                errorText.setVisibility(View.VISIBLE);
+                errorText.setText("Si sono verificati "+errors+" errori");
+                break;
+        }
+
+        return errors==0;
+    }
+
 
     void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

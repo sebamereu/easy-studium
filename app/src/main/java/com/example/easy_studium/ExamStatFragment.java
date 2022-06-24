@@ -40,7 +40,7 @@ import java.util.Random;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ExamStatFragment extends Fragment {
 
-    private Button addExam;
+    private Button addExam, editExam;
     private TextView hourStudy;
     private int hourStudyInt;
     private int countDayStudy;
@@ -52,7 +52,6 @@ public class ExamStatFragment extends Fragment {
     //int[] values={};
     ArrayList<String> esamiString=new ArrayList<>();
     ArrayList<Integer> minutiInteger=new ArrayList<>();
-
     String[] esami=new String[Exam.arrayList1.size()];
      int[] minuti=new int[Exam.arrayList1.size()];
     // TODO: Rename parameter arguments, choose names that match
@@ -102,11 +101,16 @@ public class ExamStatFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view;
+
+
         view=inflater.inflate(R.layout.fragment_exam_stat, container, false);
+
+
         addExam=view.findViewById(R.id.addExam);
         hourStudy=view.findViewById(R.id.hourStudy);
         listView=view.findViewById(R.id.list);
         anyChartView=view.findViewById(R.id.anyChart);
+        editExam=view.findViewById(R.id.editExam);
 
         String controllo;
         items = new ArrayList<>();
@@ -139,7 +143,6 @@ public class ExamStatFragment extends Fragment {
                 minuti[j]=minuto;
                 minutiInteger.add(minuto);
             }
-
 
 
 
@@ -179,11 +182,20 @@ public class ExamStatFragment extends Fragment {
 
         setupPieChart();
 
+
+        if (Exam.arrayList1.size()!=0) editExam.setVisibility(View.VISIBLE);
         addExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 replaceFragment(new ExamFragment());
 
+            }
+        });
+
+        editExam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new EditExamFragment());
             }
         });
         // Inflate the layout for this fragment

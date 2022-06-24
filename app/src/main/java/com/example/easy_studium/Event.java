@@ -18,13 +18,16 @@ import java.util.Objects;
 public class Event {
     public static ArrayList<Event> eventsList = new ArrayList<>();
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static ArrayList<Event> eventsForDate(LocalDate date) {
         ArrayList<Event> events = new ArrayList<>();
 
-        for (Event event : eventsList) {
-            if (event.getDate().equals(date))
-                events.add(event);
+
+        for (int i=0; i<eventsList.size();i++){
+            int eventDate = eventsList.get(i).getDate().getDayOfYear();
+            int cellDate = date.getDayOfYear();
+            if (eventDate==cellDate &&i==0)
+                events.add(eventsList.get(i));
+
         }
 
         return events;

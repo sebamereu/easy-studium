@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ import java.util.Locale;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class DailyCalendarFragment extends Fragment {
 
-    private Button newEventAction, previousDayAction, nextDayAction;
+    private Button newEventAction, previousDayAction, nextDayAction, deleteEvent, weeklyAction;
     private TextView monthDayText, event1;
     private TextView dayOfWeekTV;
     private ListView hourListView;
@@ -84,9 +85,14 @@ public class DailyCalendarFragment extends Fragment {
         nextDayAction=(Button) view.findViewById(R.id.nextDayAction);
         newEventAction= (Button) view.findViewById(R.id.newEventAction);
         event1=view.findViewById(R.id.event1);
+        deleteEvent=view.findViewById(R.id.deleteEvent);
+        weeklyAction=view.findViewById(R.id.weeklyAction);
+
         CalendarUtils.selectedDate = LocalDate.now();
 
         setDayView();
+
+
 
 
 
@@ -123,6 +129,46 @@ public class DailyCalendarFragment extends Fragment {
                 replaceFragment(new EventEditFragment());
             }
         });
+
+        weeklyAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new WeekViewFragment());
+            }
+        });
+
+
+        hourListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Fragment fragment = null;
+
+                switch (position) {
+
+                    case 0:
+                        fragment = new DeleteEventFragment();
+
+                        break;
+
+                }
+
+                if (fragment != null) {
+
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+                    ft.replace(R.id.deleteEvent, fragment);
+
+                    ft.addToBackStack(null);
+
+                    ft.commit();
+                }
+
+            }
+        });
+
+
+
         // Inflate the layout for this fragment
         return  view;
     }
@@ -139,11 +185,6 @@ public class DailyCalendarFragment extends Fragment {
         monthDayText.setText(CalendarUtils.monthDayFromDate(selectedDate));
         String dayOfWeek = selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
         dayOfWeekTV.setText(dayOfWeek);
-        long timestampDate = 1623307684;
-        int dateYear = selectedDate.getYear();
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int dateMonth= selectedDate.getMonth().getValue();
-        int month=Calendar.getInstance().get(Calendar.MONTH);
         int dateDay=selectedDate.getDayOfYear();
         int day=Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
@@ -158,7 +199,7 @@ public class DailyCalendarFragment extends Fragment {
         setHourAdapter();
     }
 
-    private void setHourAdapter()
+    public void setHourAdapter()
     {
         HourAdapter hourAdapter = new HourAdapter(getActivity().getApplicationContext(), hourEventList());
         hourListView.setAdapter(hourAdapter);

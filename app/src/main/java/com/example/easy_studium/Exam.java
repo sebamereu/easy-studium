@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Exam {
 
     public static ArrayList<String> arrayList1=new ArrayList<String>();
+    public static ArrayList<Exam> listExam=new ArrayList<>();
 
     private String name;
     private String cfu;
@@ -15,6 +16,7 @@ public class Exam {
         this.name=name;
         this.cfu=cfu;
     }
+
 
 
     public String getName() {

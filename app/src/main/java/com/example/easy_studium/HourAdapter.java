@@ -6,12 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentController;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,6 +24,9 @@ import java.util.List;
 
 public class HourAdapter extends ArrayAdapter<HourEvent>
 {
+    Button deleteEvent;
+
+
     public HourAdapter(@NonNull Context context, List<HourEvent> hourEvents)
     {
         super(context, 0, hourEvents);
@@ -33,10 +41,10 @@ public class HourAdapter extends ArrayAdapter<HourEvent>
 
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
+            deleteEvent=convertView.findViewById(R.id.deleteEvent);
 
         setHour(convertView, event.time);
         setEvents(convertView, event.events);
-
         return convertView;
     }
 
