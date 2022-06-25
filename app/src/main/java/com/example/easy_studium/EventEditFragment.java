@@ -132,8 +132,10 @@ public class EventEditFragment extends DialogFragment {
                                 @Override
                                 public void onTimeSet(TimePicker eventTime, int hour, int minute) {
 
+                                    if (eventTime.getMinute()<10)
+                                        eventTimeTV.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute()+"0");
+                                    else
                                         eventTimeTV.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute());
-
 
                                     eventTime.setHour(eventTime.getHour());
                                     eventTime.setMinute(eventTime.getMinute());
@@ -160,8 +162,10 @@ public class EventEditFragment extends DialogFragment {
                             @Override
                             public void onTimeSet(TimePicker eventTime, int hour, int minute) {
 
-                                eventTimeFinish.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute());
-
+                                if (eventTime.getMinute()<10)
+                                    eventTimeTV.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute()+"0");
+                                else
+                                    eventTimeTV.setText("Time: " + eventTime.getHour() + ":" + eventTime.getMinute());
 
                                 eventTime.setHour(eventTime.getHour());
                                 eventTime.setMinute(eventTime.getMinute());
